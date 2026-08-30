@@ -7,7 +7,7 @@ import { ChartPlaceholder } from '@/components/ChartPlaceholder';
 import { StarRating } from '@/components/StarRating';
 import { getJson } from '@/lib/client-fetch';
 import type { Course, Instructor, Review } from '@/lib/data/types';
-import { formatDate, humanizeHours } from '@/lib/heavy/dates';
+import { formatDate, formatPrice, humanizeHours } from '@/lib/format';
 
 const RatingChart = dynamic(() => import('@/components/RatingChart').then((m) => m.RatingChart), {
   ssr: false,
@@ -64,11 +64,7 @@ export default function CourseDetailPage() {
         <dt>Duration</dt>
         <dd>{humanizeHours(course.durationHours)}</dd>
         <dt>Price</dt>
-        <dd>
-          {new Intl.NumberFormat('en-GB', { style: 'currency', currency: 'GBP' }).format(
-            course.priceCents / 100,
-          )}
-        </dd>
+        <dd>{formatPrice(course.priceCents)}</dd>
         <dt>Enrolled</dt>
         <dd>{course.enrolments.toLocaleString('en-GB')}</dd>
         <dt>Published</dt>

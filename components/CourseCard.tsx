@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import type { CourseSummary } from '@/lib/data/store';
-import { formatDate } from '@/lib/heavy/dates';
+import { formatDate, formatPrice } from '@/lib/format';
 import { StarRating } from './StarRating';
 
 export function CourseCard({ course }: { course: CourseSummary }) {
@@ -19,11 +19,7 @@ export function CourseCard({ course }: { course: CourseSummary }) {
         <StarRating rating={course.rating} count={course.reviewCount} />
       </p>
       <p className="muted">Updated {formatDate(course.updatedAt)}</p>
-      <p className="price">
-        {new Intl.NumberFormat('en-GB', { style: 'currency', currency: 'GBP' }).format(
-          course.priceCents / 100,
-        )}
-      </p>
+      <p className="price">{formatPrice(course.priceCents)}</p>
     </article>
   );
 }

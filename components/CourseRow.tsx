@@ -1,13 +1,11 @@
 import Link from 'next/link';
 import type { CourseSummary } from '@/lib/data/store';
-import { formatDate } from '@/lib/heavy/dates';
+import { formatDate, formatInteger, formatPrice } from '@/lib/format';
 import { StarRating } from './StarRating';
 
 export function CourseRow({ course }: { course: CourseSummary }) {
-  const enrolled = new Intl.NumberFormat('en-GB').format(course.enrolments);
-  const price = new Intl.NumberFormat('en-GB', { style: 'currency', currency: 'GBP' }).format(
-    course.priceCents / 100,
-  );
+  const enrolled = formatInteger(course.enrolments);
+  const price = formatPrice(course.priceCents);
   return (
     <li className="row">
       {/* eslint-disable-next-line @next/next/no-img-element -- baseline: dimensionless <img>, see docs/fixes/05-render-work.md */}
