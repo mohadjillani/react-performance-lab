@@ -1,12 +1,18 @@
 'use client';
 
+import dynamic from 'next/dynamic';
 import { useParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
-import { RatingChart } from '@/components/RatingChart';
+import { ChartPlaceholder } from '@/components/ChartPlaceholder';
 import { StarRating } from '@/components/StarRating';
 import { getJson } from '@/lib/client-fetch';
 import type { Course, Instructor, Review } from '@/lib/data/types';
 import { formatDate, humanizeHours } from '@/lib/heavy/dates';
+
+const RatingChart = dynamic(() => import('@/components/RatingChart').then((m) => m.RatingChart), {
+  ssr: false,
+  loading: () => <ChartPlaceholder small />,
+});
 
 export default function CourseDetailPage() {
   const params = useParams<{ slug: string }>();
