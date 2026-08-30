@@ -47,7 +47,9 @@ jobs:
       - run: npx playwright install --with-deps chromium
       - name: Slug for artifact and file names
         id: slug
-        run: echo "value=$(echo '${{ matrix.branch }}' | tr -c 'A-Za-z0-9.-\n' '-')" >> "$GITHUB_OUTPUT"
+        env:
+          BRANCH: ${{ matrix.branch }}
+        run: echo "value=${BRANCH//[^A-Za-z0-9.-]/-}" >> "$GITHUB_OUTPUT"
       - name: Measure ${{ matrix.branch }}
         run: npm run measure -- --label "${{ matrix.branch }}" --no-gate --out ".measurements/${{ steps.slug.outputs.value }}.json"
       - uses: actions/upload-artifact@v4
@@ -57,6 +59,7 @@ jobs:
           path: |
             .measurements/
             .lighthouseci/
+          include-hidden-files: true
           if-no-files-found: error
 
   merge:
