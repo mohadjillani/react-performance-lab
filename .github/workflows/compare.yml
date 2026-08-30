@@ -1,0 +1,94 @@
+name: compare
+
+# Measures every branch in scripts/branches.json on identical runners, merges
+# the results and commits the regenerated docs/results.md (and the README's
+# results block) to main. Runs on demand and weekly so the table cannot go
+# stale relative to the branches.
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '0 6 * * 1'
+
+concurrency:
+  group: ${{ github.workflow }}
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+jobs:
+  plan:
+    runs-on: ubuntu-latest
+    outputs:
+      branches: ${{ steps.read.outputs.branches }}
+    steps:
+      - uses: actions/checkout@v4
+      - id: read
+        run: echo "branches=$(jq -c . scripts/branches.json)" >> "$GITHUB_OUTPUT"
+
+  measure:
+    needs: plan
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    strategy:
+      fail-fast: false
+      matrix:
+        branch: ${{ fromJSON(needs.plan.outputs.branches) }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ matrix.branch }}
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+      - run: npm ci
+      - run: npx playwright install --with-deps chromium
+      - name: Slug for artifact and file names
+        id: slug
+        run: echo "value=$(echo '${{ matrix.branch }}' | tr -c 'A-Za-z0-9.-\n' '-')" >> "$GITHUB_OUTPUT"
+      - name: Measure ${{ matrix.branch }}
+        run: npm run measure -- --label "${{ matrix.branch }}" --no-gate --out ".measurements/${{ steps.slug.outputs.value }}.json"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: measurement-${{ steps.slug.outputs.value }}
+          path: |
+            .measurements/
+            .lighthouseci/
+          if-no-files-found: error
+
+  merge:
+    needs: measure
+    if: always()
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+      - run: npm ci
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: measurement-*
+          path: .measurements
+          merge-multiple: true
+      - name: Render docs/results.md
+        run: npm run compare -- --render-only --environment "GitHub Actions, ubuntu-latest, run ${{ github.run_number }}"
+      - name: Commit the regenerated table
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add docs/results.md README.md
+          if git diff --cached --quiet; then
+            echo "results unchanged"
+          else
+            git commit -m "docs: regenerate results table from compare run ${{ github.run_number }}"
+            git push origin main
+          fi
