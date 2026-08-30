@@ -24,6 +24,12 @@ module.exports = {
         // Lighthouse defaults: mobile emulation with simulated 4G and 4x CPU slowdown.
         onlyCategories: ['performance'],
         skipAudits: ['uses-http2'],
+        // Chrome's zygote sandbox needs unprivileged user namespaces, which
+        // Ubuntu 24.04 (GitHub's ubuntu-latest) restricts through AppArmor, so
+        // Chrome aborts with "No usable sandbox!" before Lighthouse can connect.
+        // The only page loaded is this repository's own build, so the sandbox
+        // protects nothing here; the flag is harmless where the sandbox works.
+        chromeFlags: '--no-sandbox',
       },
     },
     assert: {

@@ -43,6 +43,8 @@ npx playwright install chromium     # once; ~100 MB into Playwright's cache
 
 GitHub's Ubuntu runners have Chrome preinstalled and the workflow installs Playwright's Chromium as well, so both environments use the same resolution order.
 
+Chrome is launched with `--no-sandbox` (`settings.chromeFlags` in `.lighthouserc.js`). Ubuntu 24.04 restricts the unprivileged user namespaces Chrome's sandbox depends on, so without the flag Chrome aborts on the runner before Lighthouse can connect. The only page it ever loads is this repository's own build, so nothing is given up.
+
 ## Budgets and tolerance
 
 Budgets live in `.size-limit.json` (bytes) and `.lighthouserc.js` (per-URL assertions). They are **per branch**: each fix branch tightens the budgets it improves and leaves the rest alone, so a branch is gated against its own claim, and `main` is gated against regressing further.
