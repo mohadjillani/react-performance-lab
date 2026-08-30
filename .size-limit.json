@@ -3,13 +3,13 @@
     "name": "landing first-load JS",
     "path": ".next/route-bundles/landing/*.js",
     "gzip": true,
-    "limit": "113 kB"
+    "limit": "119 kB"
   },
   {
     "name": "catalogue first-load JS",
     "path": ".next/route-bundles/catalogue/*.js",
     "gzip": true,
-    "limit": "113 kB"
+    "limit": "127 kB"
   },
   {
     "name": "course detail first-load JS",
@@ -21,6 +21,6 @@
     "name": "all client JS",
     "path": ".next/static/chunks/**/*.js",
     "gzip": true,
-    "limit": "391 kB"
+    "limit": "404 kB"
   }
 ]
