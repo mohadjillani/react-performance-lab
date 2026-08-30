@@ -1,0 +1,9 @@
+.next
+coverage
+.measurements
+.lighthouseci
+test-results
+playwright-report
+package-lock.json
+lib/data/fixtures.json
+docs/results.md
