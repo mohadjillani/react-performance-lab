@@ -225,3 +225,14 @@ h2 {
 .review p {
   margin: 0.2rem 0;
 }
+
+.virtual-list {
+  position: relative;
+}
+
+.virtual-list .row {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+}
