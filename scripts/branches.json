@@ -1,0 +1,8 @@
+[
+  "main",
+  "fix/01-code-splitting",
+  "fix/02-dependency-diet",
+  "fix/03-ssr-isr",
+  "fix/04-query-caching",
+  "fix/05-render-work"
+]
