@@ -31,17 +31,17 @@ module.exports = {
         {
           matchingUrlPattern: `^${base}/$`,
           aggregationMethod: 'median',
-          assertions: budget(0.89, 3700, 250, 0.041, 310_000),
+          assertions: budget(0.89, 3700, 250, 0.041, 270_000),
         },
         {
           matchingUrlPattern: `^${base}/courses$`,
           aggregationMethod: 'median',
-          assertions: budget(0.5, 7050, 1375, 0.02, 980_000),
+          assertions: budget(0.57, 6250, 1000, 0.02, 820_000),
         },
         {
           matchingUrlPattern: `^${base}/courses/`,
           aggregationMethod: 'median',
-          assertions: budget(0.93, 2550, 325, 0.049, 320_000),
+          assertions: budget(0.92, 2450, 325, 0.049, 270_000),
         },
       ],
     },
