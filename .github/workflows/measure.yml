@@ -1,0 +1,54 @@
+name: measure
+
+# Budget gate: builds the pushed branch, runs the behavioural parity suite
+# against that build, then measures it with size-limit and Lighthouse CI and
+# fails on any budget in .size-limit.json or .lighthouserc.js.
+
+on:
+  push:
+    branches: [main, 'fix/**']
+  pull_request:
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  measure:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+      - run: npm ci
+      - run: npx playwright install --with-deps chromium
+      - run: npm run build
+      - name: Behavioural parity
+        run: npm run test:e2e
+        env:
+          CI: 'true'
+      - name: size-limit and Lighthouse budgets
+        run: npm run measure -- --skip-build
+      - name: Upload measurement and Lighthouse reports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: measurement-${{ github.ref_name }}
+          path: |
+            .measurements/
+            .lighthouseci/
+          if-no-files-found: ignore
+      - name: Upload Playwright traces
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-${{ github.ref_name }}
+          path: test-results/
+          if-no-files-found: ignore
