@@ -1,6 +1,7 @@
 'use client';
 
 import { useQueryClient } from '@tanstack/react-query';
+import Image from 'next/image';
 import Link from 'next/link';
 import { memo } from 'react';
 import type { CourseSummary } from '@/lib/data/store';
@@ -46,8 +47,7 @@ export const CourseRow = memo(function CourseRow({
       onMouseEnter={warmReviews}
       onFocus={warmReviews}
     >
-      {/* eslint-disable-next-line @next/next/no-img-element -- baseline: dimensionless <img>, see docs/fixes/05-render-work.md */}
-      <img src={course.thumbnail} alt="" className="thumb thumb-row" />
+      <Image src={course.thumbnail} alt="" width={96} height={60} className="thumb thumb-row" />
       <div className="row-main">
         <Link href={`/courses/${course.slug}`}>{course.title}</Link>
         <p className="muted">

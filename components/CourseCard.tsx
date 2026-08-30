@@ -1,3 +1,4 @@
+import Image from 'next/image';
 import Link from 'next/link';
 import type { CourseSummary } from '@/lib/data/store';
 import { formatDate, formatPrice } from '@/lib/format';
@@ -6,8 +7,14 @@ import { StarRating } from './StarRating';
 export function CourseCard({ course }: { course: CourseSummary }) {
   return (
     <article className="card">
-      {/* eslint-disable-next-line @next/next/no-img-element -- baseline: dimensionless <img>, see docs/fixes/05-render-work.md */}
-      <img src={course.thumbnail} alt="" className="thumb" />
+      <Image
+        src={course.thumbnail}
+        alt=""
+        width={320}
+        height={200}
+        sizes="(max-width: 600px) 100vw, 320px"
+        className="thumb"
+      />
       <p className="eyebrow">{course.category}</p>
       <h3>
         <Link href={`/courses/${course.slug}`}>{course.title}</Link>

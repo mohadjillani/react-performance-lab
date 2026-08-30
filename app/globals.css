@@ -201,6 +201,7 @@ h2 {
 .thumb {
   display: block;
   width: 100%;
+  height: auto;
   border-radius: 6px;
   background: var(--line);
 }
