@@ -133,6 +133,8 @@ function main(): void {
     const updated = embedInReadme(readme, measurements, meta);
     if (updated !== readme) {
       writeFileSync(readmePath, updated);
+      // The README is checked by prettier; the table it just received is not.
+      spawnSync('npx', ['prettier', '--write', 'README.md'], { cwd: root, stdio: 'ignore' });
       console.log('updated README.md results block');
     }
   }
