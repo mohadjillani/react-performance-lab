@@ -29,6 +29,9 @@ jobs:
           cache: npm
       - run: npm ci
       - run: npx playwright install --with-deps chromium
+      - name: Slug for artifact names
+        id: slug
+        run: echo "value=$(echo '${{ github.ref_name }}' | tr -c 'A-Za-z0-9.-\n' '-')" >> "$GITHUB_OUTPUT"
       - run: npm run build
       - name: Behavioural parity
         run: npm run test:e2e
@@ -40,7 +43,7 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: measurement-${{ github.ref_name }}
+          name: measurement-${{ steps.slug.outputs.value }}
           path: |
             .measurements/
             .lighthouseci/
@@ -49,6 +52,6 @@ jobs:
         if: failure()
         uses: actions/upload-artifact@v4
         with:
-          name: playwright-${{ github.ref_name }}
+          name: playwright-${{ steps.slug.outputs.value }}
           path: test-results/
           if-no-files-found: ignore
