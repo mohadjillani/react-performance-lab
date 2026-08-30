@@ -171,6 +171,7 @@ export function renderResults(measurements: Measurement[], meta: RenderMeta): st
     '- **API requests** counts calls to `/api/*` during the page load. Server rendering and query hydration drive it to zero for the initial view.',
     "- **DOM elements** is the render-work fix's metric: virtualising the catalogue changes it by two orders of magnitude while the parity suite proves the same 2,000 courses are still reachable.",
     '- A ⚠ marks a branch that failed its own budget in `.size-limit.json` or `.lighthouserc.js`.',
+    '- The per-fix pages under `docs/fixes/` quote a separate, earlier run of each branch; a few points of difference against this table is run-to-run variance, not a change in the code.',
     '',
   );
   return sections.join('\n');
