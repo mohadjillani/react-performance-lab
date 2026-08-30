@@ -1,53 +1,24 @@
-'use client';
-
-import dynamic from 'next/dynamic';
-import { useParams } from 'next/navigation';
-import { useEffect, useState } from 'react';
-import { ChartPlaceholder } from '@/components/ChartPlaceholder';
+import { notFound } from 'next/navigation';
+import { Reviews } from '@/components/Reviews';
 import { StarRating } from '@/components/StarRating';
-import { getJson } from '@/lib/client-fetch';
-import type { Course, Instructor, Review } from '@/lib/data/types';
+import { getCourse, getInstructor, listFeaturedCourses } from '@/lib/data/store';
 import { formatDate, formatPrice, humanizeHours } from '@/lib/format';
 
-const RatingChart = dynamic(() => import('@/components/RatingChart').then((m) => m.RatingChart), {
-  ssr: false,
-  loading: () => <ChartPlaceholder small />,
-});
+// The course and its instructor are rendered on the server and cached for a
+// minute per slug. The six most popular courses are built ahead of time; the
+// rest render on first request and are cached from then on.
+export const revalidate = 60;
 
-export default function CourseDetailPage() {
-  const params = useParams<{ slug: string }>();
-  const [course, setCourse] = useState<Course | null>(null);
-  const [instructor, setInstructor] = useState<Instructor | null>(null);
-  const [reviews, setReviews] = useState<Review[] | null>(null);
-  const [error, setError] = useState<string | null>(null);
+export async function generateStaticParams() {
+  const featured = await listFeaturedCourses();
+  return featured.map((course) => ({ slug: course.slug }));
+}
 
-  useEffect(() => {
-    let cancelled = false;
-    const load = async () => {
-      const loadedCourse = await getJson<Course>(`/api/courses/${params.slug}`);
-      if (cancelled) return;
-      setCourse(loadedCourse);
-
-      const loadedInstructor = await getJson<Instructor>(
-        `/api/instructors/${String(loadedCourse.instructorId)}`,
-      );
-      if (cancelled) return;
-      setInstructor(loadedInstructor);
-
-      const loadedReviews = await getJson<Review[]>(`/api/courses/${params.slug}/reviews`);
-      if (cancelled) return;
-      setReviews(loadedReviews);
-    };
-    load().catch((err: unknown) => {
-      if (!cancelled) setError(err instanceof Error ? err.message : 'Failed to load');
-    });
-    return () => {
-      cancelled = true;
-    };
-  }, [params.slug]);
-
-  if (error) return <p role="alert">{error}</p>;
-  if (!course) return <p className="muted">Loading&hellip;</p>;
+export default async function CourseDetailPage({ params }: { params: Promise<{ slug: string }> }) {
+  const { slug } = await params;
+  const course = await getCourse(slug);
+  if (!course) notFound();
+  const instructor = await getInstructor(course.instructorId);
 
   return (
     <article className="detail">
@@ -80,42 +51,11 @@ export default function CourseDetailPage() {
             <p>{instructor.bio}</p>
           </div>
         ) : (
-          <p className="muted">Loading instructor&hellip;</p>
+          <p className="muted">Instructor unavailable</p>
         )}
       </section>
 
-      <section data-testid="reviews">
-        <h2>
-          Reviews{' '}
-          {reviews && (
-            <span className="muted" data-testid="review-count">
-              ({reviews.length})
-            </span>
-          )}
-        </h2>
-        {reviews ? (
-          <>
-            <RatingChart reviews={reviews} />
-            <ul className="review-list">
-              {reviews.map((review) => (
-                <li key={review.id} className="review">
-                  <p className="review-head">
-                    <strong>{review.author}</strong>{' '}
-                    <span aria-label={`${String(review.rating)} out of 5`}>
-                      {'★'.repeat(review.rating)}
-                      <span className="muted">{'★'.repeat(5 - review.rating)}</span>
-                    </span>{' '}
-                    <span className="muted">{formatDate(review.createdAt)}</span>
-                  </p>
-                  <p>{review.body}</p>
-                </li>
-              ))}
-            </ul>
-          </>
-        ) : (
-          <p className="muted">Loading reviews&hellip;</p>
-        )}
-      </section>
+      <Reviews slug={slug} />
     </article>
   );
 }

@@ -1,81 +1,42 @@
-'use client';
-
-import dynamic from 'next/dynamic';
-import { useEffect, useState } from 'react';
-import { ChartPlaceholder } from '@/components/ChartPlaceholder';
 import { CourseCard } from '@/components/CourseCard';
-import { getJson } from '@/lib/client-fetch';
-import type { CategoryStat, CourseSummary } from '@/lib/data/store';
+import { LazyCategoryChart } from '@/components/LazyCategoryChart';
 import { meanBy, sortByDesc, sumBy } from '@/lib/collections';
+import { getCategoryStats, listFeaturedCourses } from '@/lib/data/store';
 
-// The chart library is the largest thing on this route and is not needed for
-// first paint. Loading it on the client, after hydration, keeps it out of the
-// first-load bundle; the placeholder keeps the layout stable meanwhile.
-const CategoryChart = dynamic(
-  () => import('@/components/CategoryChart').then((m) => m.CategoryChart),
-  { ssr: false, loading: () => <ChartPlaceholder /> },
-);
+// Rendered on the server and cached for a minute. The two reads happen in
+// parallel on the server, once per revalidation, instead of in every
+// visitor's browser after hydration.
+export const revalidate = 60;
 
-interface LandingData {
-  stats: CategoryStat[];
-  featured: CourseSummary[];
-}
-
-export default function LandingPage() {
-  const [data, setData] = useState<LandingData | null>(null);
-  const [error, setError] = useState<string | null>(null);
-
-  useEffect(() => {
-    let cancelled = false;
-    Promise.all([
-      getJson<CategoryStat[]>('/api/stats'),
-      getJson<CourseSummary[]>('/api/courses?featured=1'),
-    ])
-      .then(([stats, featured]) => {
-        if (!cancelled) setData({ stats, featured });
-      })
-      .catch((err: unknown) => {
-        if (!cancelled) setError(err instanceof Error ? err.message : 'Failed to load');
-      });
-    return () => {
-      cancelled = true;
-    };
-  }, []);
-
-  const totalCourses = data ? sumBy(data.stats, 'courses') : 0;
-  const totalEnrolments = data ? sumBy(data.stats, 'enrolments') : 0;
-  const featuredRating = data ? meanBy(data.featured, 'rating') : 0;
+export default async function LandingPage() {
+  const [stats, featured] = await Promise.all([getCategoryStats(), listFeaturedCourses()]);
+  const totalCourses = sumBy(stats, 'courses');
+  const totalEnrolments = sumBy(stats, 'enrolments');
+  const featuredRating = meanBy(featured, 'rating');
 
   return (
     <>
       <h1>Learn something this week</h1>
       <p className="muted">2,000 courses across twelve categories, taught by practitioners.</p>
 
-      {error && <p role="alert">{error}</p>}
-      {!data && !error && <p className="muted">Loading&hellip;</p>}
+      <section>
+        <h2>Courses by category</h2>
+        <p className="muted" data-testid="landing-totals">
+          {totalCourses.toLocaleString('en-GB')} courses &middot;{' '}
+          {totalEnrolments.toLocaleString('en-GB')} enrolments &middot; featured courses average{' '}
+          {featuredRating.toFixed(1)} stars
+        </p>
+        <LazyCategoryChart stats={sortByDesc(stats, 'courses')} />
+      </section>
 
-      {data && (
-        <>
-          <section>
-            <h2>Courses by category</h2>
-            <p className="muted" data-testid="landing-totals">
-              {totalCourses.toLocaleString('en-GB')} courses &middot;{' '}
-              {totalEnrolments.toLocaleString('en-GB')} enrolments &middot; featured courses average{' '}
-              {featuredRating.toFixed(1)} stars
-            </p>
-            <CategoryChart stats={sortByDesc(data.stats, 'courses')} />
-          </section>
-
-          <section>
-            <h2>Most popular</h2>
-            <div className="card-grid" data-testid="featured-courses">
-              {data.featured.map((course) => (
-                <CourseCard key={course.id} course={course} />
-              ))}
-            </div>
-          </section>
-        </>
-      )}
+      <section>
+        <h2>Most popular</h2>
+        <div className="card-grid" data-testid="featured-courses">
+          {featured.map((course) => (
+            <CourseCard key={course.id} course={course} />
+          ))}
+        </div>
+      </section>
     </>
   );
 }
