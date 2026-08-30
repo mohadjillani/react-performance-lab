@@ -61,6 +61,8 @@ The rule for setting a budget from a measurement:
 
 Bundle sizes are deterministic for a given lockfile and get a small tolerance; Lighthouse metrics are not and get a larger one. The tolerance is there to absorb runner variance, not to leave room for regressions: a change that eats the whole margin should be treated as one.
 
+The gate runs on GitHub-hosted Ubuntu runners, and on the catalogue's 22,000-element render their CPU is roughly half as fast as a development laptop: TBT there is about twice the local number and the score correspondingly lower. The catalogue's TBT and performance budgets on `main`, `fix/02` and `fix/03` are therefore set from a runner measurement — the `measure` workflow's own `.measurements/<branch>.json` artifact — with the same rule. Every other budget passes on both machines with margin and keeps its laptop-derived value.
+
 ## Noise
 
 Lighthouse numbers vary between runs, between machines, and between runners of the same machine type. Three things keep this honest:

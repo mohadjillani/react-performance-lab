@@ -31,7 +31,7 @@ jobs:
       - run: npx playwright install --with-deps chromium
       - name: Slug for artifact names
         id: slug
-        run: echo "value=$(echo '${{ github.ref_name }}' | tr -c 'A-Za-z0-9.-\n' '-')" >> "$GITHUB_OUTPUT"
+        run: echo "value=${GITHUB_REF_NAME//[^A-Za-z0-9.-]/-}" >> "$GITHUB_OUTPUT"
       - run: npm run build
       - name: Behavioural parity
         run: npm run test:e2e
@@ -47,6 +47,7 @@ jobs:
           path: |
             .measurements/
             .lighthouseci/
+          include-hidden-files: true
           if-no-files-found: ignore
       - name: Upload Playwright traces
         if: failure()
