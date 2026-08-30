@@ -41,7 +41,7 @@ module.exports = {
         {
           matchingUrlPattern: `^${base}/courses/`,
           aggregationMethod: 'median',
-          assertions: budget(0.92, 3000, 300, 0.023, 340_000),
+          assertions: budget(0.94, 2500, 275, 0.02, 360_000),
         },
       ],
     },
