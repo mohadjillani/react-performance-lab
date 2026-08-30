@@ -86,7 +86,7 @@ export function summariseAnalysis(assets: AnalyzerAsset[], topN = 6): AnalysisSu
 }
 
 export function renderAnalysis(summary: AnalysisSummary): string {
-  const kb = (bytes: number) => `${(bytes / 1024).toFixed(1)} kB`;
+  const kb = (bytes: number) => `${(bytes / 1000).toFixed(1)} kB`;
   const lines = [
     `Client JS (gzip): ${kb(summary.totalClientGzip)} across ${String(summary.chunks.length)} chunks`,
     '',
@@ -96,7 +96,7 @@ export function renderAnalysis(summary: AnalysisSummary): string {
   for (const chunk of summary.chunks) {
     if (chunk.gzip < 2048) continue;
     const packages = chunk.packages
-      .filter((p) => p.gzip >= 1024)
+      .filter((p) => p.gzip >= 1000)
       .map((p) => `${p.package} ${kb(p.gzip)}`)
       .join(', ');
     const initial = chunk.initialFor.length > 0 ? chunk.initialFor.join(', ') : 'async';
