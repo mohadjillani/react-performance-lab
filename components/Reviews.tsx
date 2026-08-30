@@ -1,10 +1,9 @@
 'use client';
 
+import { useQuery } from '@tanstack/react-query';
 import dynamic from 'next/dynamic';
-import { useEffect, useState } from 'react';
-import { getJson } from '@/lib/client-fetch';
-import type { Review } from '@/lib/data/types';
 import { formatDate } from '@/lib/format';
+import { reviewsQuery } from '@/lib/queries';
 import { ChartPlaceholder } from './ChartPlaceholder';
 
 const RatingChart = dynamic(() => import('@/components/RatingChart').then((m) => m.RatingChart), {
@@ -13,26 +12,13 @@ const RatingChart = dynamic(() => import('@/components/RatingChart').then((m) =>
 });
 
 /**
- * Reviews change more often than the course they belong to, so they are not
- * part of the ISR-cached page: they are fetched live on the client. One
- * request, not three, and it starts as soon as this component mounts.
+ * Reads reviews from the query cache. On a fresh page load the cache was
+ * hydrated by the server, so this renders with data on the first pass; on a
+ * client navigation from the catalogue the hover prefetch usually got there
+ * first. The fetch in lib/queries only runs when neither did.
  */
 export function Reviews({ slug }: { slug: string }) {
-  const [reviews, setReviews] = useState<Review[] | null>(null);
-
-  useEffect(() => {
-    let cancelled = false;
-    getJson<Review[]>(`/api/courses/${slug}/reviews`)
-      .then((list) => {
-        if (!cancelled) setReviews(list);
-      })
-      .catch(() => {
-        if (!cancelled) setReviews([]);
-      });
-    return () => {
-      cancelled = true;
-    };
-  }, [slug]);
+  const { data: reviews } = useQuery(reviewsQuery(slug));
 
   return (
     <section data-testid="reviews">

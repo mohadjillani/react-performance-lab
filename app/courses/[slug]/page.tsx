@@ -1,8 +1,10 @@
+import { HydrationBoundary, QueryClient, dehydrate } from '@tanstack/react-query';
 import { notFound } from 'next/navigation';
 import { Reviews } from '@/components/Reviews';
 import { StarRating } from '@/components/StarRating';
-import { getCourse, getInstructor, listFeaturedCourses } from '@/lib/data/store';
+import { getCourse, getInstructor, listFeaturedCourses, listReviews } from '@/lib/data/store';
 import { formatDate, formatPrice, humanizeHours } from '@/lib/format';
+import { reviewsQuery } from '@/lib/queries';
 
 // The course and its instructor are rendered on the server and cached for a
 // minute per slug. The six most popular courses are built ahead of time; the
@@ -18,7 +20,19 @@ export default async function CourseDetailPage({ params }: { params: Promise<{ s
   const { slug } = await params;
   const course = await getCourse(slug);
   if (!course) notFound();
-  const instructor = await getInstructor(course.instructorId);
+
+  // The instructor and the reviews both only depend on what we now have, so
+  // they are read in parallel. The reviews go into a query cache that is
+  // dehydrated into the page: the client renders them on its first pass and
+  // makes no request for them.
+  const queryClient = new QueryClient();
+  const [instructor] = await Promise.all([
+    getInstructor(course.instructorId),
+    queryClient.query({
+      queryKey: reviewsQuery(slug).queryKey,
+      queryFn: () => listReviews(course.id),
+    }),
+  ]);
 
   return (
     <article className="detail">
@@ -55,7 +69,9 @@ export default async function CourseDetailPage({ params }: { params: Promise<{ s
         )}
       </section>
 
-      <Reviews slug={slug} />
+      <HydrationBoundary state={dehydrate(queryClient)}>
+        <Reviews slug={slug} />
+      </HydrationBoundary>
     </article>
   );
 }
