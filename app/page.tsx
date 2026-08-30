@@ -1,9 +1,11 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import { CategoryChart } from '@/components/CategoryChart';
 import { CourseCard } from '@/components/CourseCard';
 import { getJson } from '@/lib/client-fetch';
 import type { CategoryStat, CourseSummary } from '@/lib/data/store';
+import { meanBy, sortByDesc, sumBy } from '@/lib/heavy/collections';
 
 interface LandingData {
   stats: CategoryStat[];
@@ -31,6 +33,10 @@ export default function LandingPage() {
     };
   }, []);
 
+  const totalCourses = data ? sumBy(data.stats, 'courses') : 0;
+  const totalEnrolments = data ? sumBy(data.stats, 'enrolments') : 0;
+  const featuredRating = data ? meanBy(data.featured, 'rating') : 0;
+
   return (
     <>
       <h1>Learn something this week</h1>
@@ -43,13 +49,12 @@ export default function LandingPage() {
         <>
           <section>
             <h2>Courses by category</h2>
-            <ul className="stat-list" data-testid="category-stats">
-              {data.stats.map((stat) => (
-                <li key={stat.category}>
-                  {stat.category}: {stat.courses} courses
-                </li>
-              ))}
-            </ul>
+            <p className="muted" data-testid="landing-totals">
+              {totalCourses.toLocaleString('en-GB')} courses &middot;{' '}
+              {totalEnrolments.toLocaleString('en-GB')} enrolments &middot; featured courses average{' '}
+              {featuredRating.toFixed(1)} stars
+            </p>
+            <CategoryChart stats={sortByDesc(data.stats, 'courses')} />
           </section>
 
           <section>

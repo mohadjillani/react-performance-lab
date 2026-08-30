@@ -1,10 +1,13 @@
 import Link from 'next/link';
 import type { CourseSummary } from '@/lib/data/store';
+import { formatDate } from '@/lib/heavy/dates';
 import { StarRating } from './StarRating';
 
 export function CourseCard({ course }: { course: CourseSummary }) {
   return (
     <article className="card">
+      {/* eslint-disable-next-line @next/next/no-img-element -- baseline: dimensionless <img>, see docs/fixes/05-render-work.md */}
+      <img src={course.thumbnail} alt="" className="thumb" />
       <p className="eyebrow">{course.category}</p>
       <h3>
         <Link href={`/courses/${course.slug}`}>{course.title}</Link>
@@ -15,6 +18,7 @@ export function CourseCard({ course }: { course: CourseSummary }) {
       <p>
         <StarRating rating={course.rating} count={course.reviewCount} />
       </p>
+      <p className="muted">Updated {formatDate(course.updatedAt)}</p>
       <p className="price">
         {new Intl.NumberFormat('en-GB', { style: 'currency', currency: 'GBP' }).format(
           course.priceCents / 100,

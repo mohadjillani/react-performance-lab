@@ -184,3 +184,44 @@ h2 {
 .facts dd {
   margin: 0;
 }
+
+.chart {
+  height: 320px;
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 0.5rem;
+}
+
+.chart-small {
+  height: 180px;
+  max-width: 420px;
+}
+
+.thumb {
+  display: block;
+  width: 100%;
+  border-radius: 6px;
+  background: var(--line);
+}
+
+.thumb-row {
+  width: 96px;
+  flex: 0 0 96px;
+  align-self: flex-start;
+}
+
+.review-list {
+  list-style: none;
+  padding: 0;
+  margin: 1rem 0 0;
+}
+
+.review {
+  border-top: 1px solid var(--line);
+  padding: 0.75rem 0;
+}
+
+.review p {
+  margin: 0.2rem 0;
+}
