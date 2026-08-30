@@ -1,7 +1,7 @@
 'use client';
 
 import { Bar, BarChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts';
-import { countBy } from '@/lib/heavy/collections';
+import { countBy } from '@/lib/collections';
 import type { Review } from '@/lib/data/types';
 
 export function RatingChart({ reviews }: { reviews: Review[] }) {

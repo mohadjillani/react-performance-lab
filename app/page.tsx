@@ -6,7 +6,7 @@ import { ChartPlaceholder } from '@/components/ChartPlaceholder';
 import { CourseCard } from '@/components/CourseCard';
 import { getJson } from '@/lib/client-fetch';
 import type { CategoryStat, CourseSummary } from '@/lib/data/store';
-import { meanBy, sortByDesc, sumBy } from '@/lib/heavy/collections';
+import { meanBy, sortByDesc, sumBy } from '@/lib/collections';
 
 // The chart library is the largest thing on this route and is not needed for
 // first paint. Loading it on the client, after hydration, keeps it out of the
