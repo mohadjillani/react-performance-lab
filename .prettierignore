@@ -7,3 +7,4 @@ playwright-report
 package-lock.json
 lib/data/fixtures.json
 docs/results.md
+docs/profile-first/*.json

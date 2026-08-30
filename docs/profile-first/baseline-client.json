@@ -1,0 +1,363 @@
+{
+  "generatedFrom": ".next/analyze/client.json",
+  "totalClientGzip": 360135,
+  "chunks": [
+    {
+      "chunk": "static/chunks/440-9ec5fb8ea94898ab.js",
+      "gzip": 106471,
+      "initialFor": [
+        "app/courses/[slug]/page",
+        "app/page"
+      ],
+      "packages": [
+        {
+          "package": "recharts",
+          "gzip": 96797
+        },
+        {
+          "package": "victory-vendor",
+          "gzip": 15867
+        },
+        {
+          "package": "decimal.js-light",
+          "gzip": 5478
+        },
+        {
+          "package": "@reduxjs/toolkit",
+          "gzip": 4433
+        },
+        {
+          "package": "es-toolkit",
+          "gzip": 3846
+        },
+        {
+          "package": "immer",
+          "gzip": 3705
+        }
+      ]
+    },
+    {
+      "chunk": "static/chunks/framework-085cf39580498177.js",
+      "gzip": 59696,
+      "initialFor": [
+        "main"
+      ],
+      "packages": [
+        {
+          "package": "react-dom",
+          "gzip": 56405
+        },
+        {
+          "package": "react",
+          "gzip": 3133
+        },
+        {
+          "package": "scheduler",
+          "gzip": 1522
+        }
+      ]
+    },
+    {
+      "chunk": "static/chunks/4bd1b696-c023c6e3521b1417.js",
+      "gzip": 54241,
+      "initialFor": [
+        "main-app"
+      ],
+      "packages": [
+        {
+          "package": "next",
+          "gzip": 54190
+        }
+      ]
+    },
+    {
+      "chunk": "static/chunks/255-c5a697ddbf82d774.js",
+      "gzip": 46372,
+      "initialFor": [
+        "main-app"
+      ],
+      "packages": [
+        {
+          "package": "next",
+          "gzip": 80616
+        },
+        {
+          "package": "@swc/helpers",
+          "gzip": 737
+        }
+      ]
+    },
+    {
+      "chunk": "static/chunks/main-d7c17dd1098f92bf.js",
+      "gzip": 36969,
+      "initialFor": [
+        "main"
+      ],
+      "packages": [
+        {
+          "package": "next",
+          "gzip": 58029
+        },
+        {
+          "package": "@swc/helpers",
+          "gzip": 462
+        }
+      ]
+    },
+    {
+      "chunk": "static/chunks/e37a0b60-47e776574b899098.js",
+      "gzip": 25022,
+      "initialFor": [
+        "app/courses/[slug]/page",
+        "app/page"
+      ],
+      "packages": [
+        {
+          "package": "lodash",
+          "gzip": 24980
+        }
+      ]
+    },
+    {
+      "chunk": "static/chunks/13b76428-8a44d6718d54fa7a.js",
+      "gzip": 18931,
+      "initialFor": [
+        "app/courses/[slug]/page",
+        "app/courses/page",
+        "app/page"
+      ],
+      "packages": [
+        {
+          "package": "moment",
+          "gzip": 18890
+        }
+      ]
+    },
+    {
+      "chunk": "static/chunks/619-ba102abea3e3d0e4.js",
+      "gzip": 3385,
+      "initialFor": [
+        "app/courses/page",
+        "app/layout",
+        "app/page"
+      ],
+      "packages": [
+        {
+          "package": "next",
+          "gzip": 4362
+        }
+      ]
+    },
+    {
+      "chunk": "static/chunks/app/courses/[slug]/page-4f158ce87f84f991.js",
+      "gzip": 1839,
+      "initialFor": [
+        "app/courses/[slug]/page"
+      ],
+      "packages": [
+        {
+          "package": "app",
+          "gzip": 1356
+        },
+        {
+          "package": "lib",
+          "gzip": 495
+        },
+        {
+          "package": "components",
+          "gzip": 278
+        },
+        {
+          "package": "next",
+          "gzip": 10
+        }
+      ]
+    },
+    {
+      "chunk": "static/chunks/app/page-20175602b8f3c525.js",
+      "gzip": 1764,
+      "initialFor": [
+        "app/page"
+      ],
+      "packages": [
+        {
+          "package": "app",
+          "gzip": 1254
+        },
+        {
+          "package": "lib",
+          "gzip": 495
+        },
+        {
+          "package": "components",
+          "gzip": 278
+        }
+      ]
+    },
+    {
+      "chunk": "static/chunks/webpack-3fcacae817f3ffab.js",
+      "gzip": 1740,
+      "initialFor": [
+        "main",
+        "main-app"
+      ],
+      "packages": [
+        {
+          "package": "static",
+          "gzip": 1740
+        }
+      ]
+    },
+    {
+      "chunk": "static/chunks/app/courses/page-086191aa6f31aaae.js",
+      "gzip": 1257,
+      "initialFor": [
+        "app/courses/page"
+      ],
+      "packages": [
+        {
+          "package": "app",
+          "gzip": 843
+        },
+        {
+          "package": "lib",
+          "gzip": 312
+        },
+        {
+          "package": "components",
+          "gzip": 278
+        }
+      ]
+    },
+    {
+      "chunk": "static/chunks/app/_not-found/page-edb1ba6c1b075049.js",
+      "gzip": 993,
+      "initialFor": [
+        "app/_not-found/page"
+      ],
+      "packages": [
+        {
+          "package": "next",
+          "gzip": 1304
+        }
+      ]
+    },
+    {
+      "chunk": "static/chunks/main-app-a960a1630563767c.js",
+      "gzip": 226,
+      "initialFor": [
+        "main-app"
+      ],
+      "packages": [
+        {
+          "package": "static",
+          "gzip": 226
+        }
+      ]
+    },
+    {
+      "chunk": "static/chunks/pages/_app-7d307437aca18ad4.js",
+      "gzip": 190,
+      "initialFor": [
+        "pages/_app"
+      ],
+      "packages": [
+        {
+          "package": "static",
+          "gzip": 190
+        }
+      ]
+    },
+    {
+      "chunk": "static/chunks/pages/_error-cb2a52f75f2162e2.js",
+      "gzip": 180,
+      "initialFor": [
+        "pages/_error"
+      ],
+      "packages": [
+        {
+          "package": "static",
+          "gzip": 180
+        }
+      ]
+    },
+    {
+      "chunk": "static/chunks/app/layout-0c69daa4f92fc69d.js",
+      "gzip": 179,
+      "initialFor": [
+        "app/layout"
+      ],
+      "packages": [
+        {
+          "package": "app",
+          "gzip": 26
+        }
+      ]
+    },
+    {
+      "chunk": "static/chunks/app/api/courses/[slug]/reviews/route-9ff9105bc7406d3b.js",
+      "gzip": 136,
+      "initialFor": [
+        "app/api/courses/[slug]/reviews/route"
+      ],
+      "packages": [
+        {
+          "package": "static",
+          "gzip": 136
+        }
+      ]
+    },
+    {
+      "chunk": "static/chunks/app/api/courses/[slug]/route-9ff9105bc7406d3b.js",
+      "gzip": 136,
+      "initialFor": [
+        "app/api/courses/[slug]/route"
+      ],
+      "packages": [
+        {
+          "package": "static",
+          "gzip": 136
+        }
+      ]
+    },
+    {
+      "chunk": "static/chunks/app/api/courses/route-9ff9105bc7406d3b.js",
+      "gzip": 136,
+      "initialFor": [
+        "app/api/courses/route"
+      ],
+      "packages": [
+        {
+          "package": "static",
+          "gzip": 136
+        }
+      ]
+    },
+    {
+      "chunk": "static/chunks/app/api/instructors/[id]/route-9ff9105bc7406d3b.js",
+      "gzip": 136,
+      "initialFor": [
+        "app/api/instructors/[id]/route"
+      ],
+      "packages": [
+        {
+          "package": "static",
+          "gzip": 136
+        }
+      ]
+    },
+    {
+      "chunk": "static/chunks/app/api/stats/route-9ff9105bc7406d3b.js",
+      "gzip": 136,
+      "initialFor": [
+        "app/api/stats/route"
+      ],
+      "packages": [
+        {
+          "package": "static",
+          "gzip": 136
+        }
+      ]
+    }
+  ]
+}
